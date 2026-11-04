@@ -23,7 +23,7 @@ This repo runs the LinkedIn + Instagram content for Triptastic Holidays LLP. The
    - At least one Reel per week should use real or Flow footage: write `flow-shots.md` (3–4 ready-to-paste Google Flow prompts, following `brand/flow-guide.md`) and a `reel-<topic>.json` clip spec. When the owner uploads the clips, save them in `incoming/<week>/`, then run `node scripts/edit-clips.mjs content/<week>/reel-<topic>.json`. If no clips arrive by Wednesday, fall back to a `render-reel.mjs` text Reel.
    - For each Reel, also write `vo-<topic>.txt`: a 20–30 second spoken voiceover script (~60–75 words, conversational, first person plural for the brand). If the owner uploads a voiceover MP3 (own recording or VoiceStudio clone, see `brand/voice-guide.md`), save it in `incoming/<week>/`, add `"voiceover"` to the Reel spec and re-render.
    - Use the `linkedin-skills` humanizer pass on LinkedIn drafts when available.
-3. Commit + push, then send the owner the drafts (text in chat + the MP4 files) and ask them to approve, edit or reject each post by ID (LI-1, IG-2…).
+3. For every Reel run `bash scripts/storyboard.sh <reel>.mp4` (one-image contact sheet of every scene). Commit + push, then send the owner the drafts: text in chat + each Reel's **storyboard first**, then the MP4. Apply the style notes in `brand/style-references.md` and ask them to approve, edit or reject each post by ID (LI-1, IG-2…).
 4. On approval: mark `APPROVED` in `posts.md`. If the Publora connector is available, schedule each approved post for its slot and mark `SCHEDULED`. If not, give the owner the final text and files to paste, ready to copy.
 5. After posting, add a row to `log.md`. When stats are available (Publora `post_stats`), record them and use them to pick next week's topics.
 
@@ -38,6 +38,12 @@ Installed on demand with `bash scripts/setup-openmontage.sh` (~8 min, pinned com
 - **clip-factory**: several Reels from one long video.
 Always pass its output through `scripts/edit-clips.mjs` (or its HyperFrames compose with the brand colours/logo) so every Reel carries the Triptastic logo and end card.
 Needs network access to: api.pexels.com, pixabay.com, cdn.pixabay.com, videos.pexels.com, images.pexels.com, huggingface.co (+ cdn-lfs.huggingface.co, cas-bridge.xethub.hf.co) for voice/caption models. If a host is blocked, tell the owner which one; don't fake output.
+
+## Running on the owner's computer (optional)
+The same repo works with the Claude desktop app (Claude Code) on the owner's computer, which avoids this cloud session's limits: raw footage straight from a local folder or hard disk, Whisper captions and Pexels/Hugging Face downloads (not blocked locally). If the owner connects a folder through Remote Control, prefer working there for footage-heavy edits.
+
+## Export quality
+Render at 1080×1920. Instagram re-compresses everything to 1080 wide, so 4K exports only cost render time and upload size.
 
 ## Reel template
 `scripts/render-reel.mjs` builds a branded 1080×1920 tips Reel from a JSON spec using HyperFrames (heygen-com/hyperframes, pinned in package.json). Colours, name and contact line come from `brand/brand.json`. Instagram audio is added by the owner in-app (trending audio gets more reach).
