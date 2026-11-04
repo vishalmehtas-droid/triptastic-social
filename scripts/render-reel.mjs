@@ -12,7 +12,7 @@
 //   "cta": { "line": "Planning your honeymoon?\nWe'll handle the details.", "button": "DM \"HONEYMOON\"" },
 //   "out": "content/2026-w45/reel-honeymoon.mp4"   // optional
 // }
-// In "body", **text** is highlighted in the brand accent colour.
+// In "body", **text** is highlighted in the brand red.
 
 import { readFileSync, writeFileSync, mkdtempSync, copyFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -41,7 +41,7 @@ const INTRO = 3.5, ITEM = 3.5, OUTRO = 3;
 const scenes = [];
 let t = 0;
 scenes.push({ start: t, dur: INTRO, html: `
-  <div class="brand">${esc(brand.nameMain)} <b>${esc(brand.nameAccent)}</b></div>
+  <img class="logo" src="logo.png" alt="Triptastic" />
   ${spec.kicker ? `<div class="kicker">${esc(spec.kicker)}</div>` : ""}
   <div class="big">${esc(spec.title)}</div>` });
 t += INTRO;
@@ -53,7 +53,7 @@ spec.items.forEach((it, i) => {
   t += ITEM;
 });
 scenes.push({ start: t, dur: OUTRO, html: `
-  <div class="brand">${esc(brand.nameMain)} <b>${esc(brand.nameAccent)}</b></div>
+  <img class="endlogo" src="logo.png" alt="Triptastic" />
   <div class="cta">${rich(spec.cta.line)}</div>
   <div><span class="pill">${esc(spec.cta.button)}</span></div>
   ${brand.contactLine ? `<div class="contact">${esc(brand.contactLine)}</div>` : ""}` });
@@ -68,24 +68,25 @@ const html = `<!doctype html>
 <meta name="viewport" content="width=1080, height=1920" />
 <script src="gsap.min.js"></script>
 <style>
-:root { --sea:${c.primary}; --deep:${c.dark}; --sun:${c.accent}; --coral:${c.highlight}; --ink:#fff; --font:${brand.font}; }
+:root { --teal:${c.teal}; --tealDark:${c.tealDark}; --gold:${c.gold}; --orange:${c.orange}; --red:${c.red}; --cream:${c.cream}; --font:${brand.font}; }
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:1080px; height:1920px; overflow:hidden; background:var(--deep); }
-#root { width:100%; height:100%; position:relative; font-family:var(--font); color:var(--ink); }
-.scene { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; background:linear-gradient(160deg, var(--sea) 0%, var(--deep) 75%); }
-.brand { position:absolute; top:120px; left:110px; font-size:34px; letter-spacing:.18em; text-transform:uppercase; opacity:.85; }
-.brand b { color:var(--sun); }
-.kicker { font-size:40px; color:var(--sun); font-weight:700; margin-bottom:36px; letter-spacing:.04em; }
-.big { font-size:104px; font-weight:800; line-height:1.02; letter-spacing:-.02em; }
-.num { font-size:220px; font-weight:900; color:var(--coral); line-height:1; margin-bottom:30px; }
-.tip { font-size:82px; font-weight:800; line-height:1.05; margin-bottom:40px; }
-.fix { font-size:46px; line-height:1.35; opacity:.92; }
-.fix b, .cta b { color:var(--sun); }
-.cta { font-size:64px; font-weight:800; line-height:1.15; margin-bottom:50px; }
-.pill { display:inline-block; background:var(--sun); color:var(--deep); font-size:48px; font-weight:800; padding:26px 46px; border-radius:80px; }
-.contact { margin-top:40px; font-size:40px; opacity:.85; }
-.bar { position:absolute; bottom:160px; left:110px; right:110px; height:8px; background:rgba(255,255,255,.15); border-radius:8px; }
-.bar i { display:block; height:100%; width:0; background:var(--sun); border-radius:8px; }
+html, body { width:1080px; height:1920px; overflow:hidden; background:var(--cream); }
+#root { width:100%; height:100%; position:relative; font-family:var(--font); color:var(--tealDark); }
+.scene { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; background:linear-gradient(165deg, #ffffff 0%, var(--cream) 70%, #ffe9cf 100%); }
+.scene::after { content:""; position:absolute; left:0; right:0; bottom:0; height:22px; background:linear-gradient(90deg, var(--gold), var(--orange), var(--red)); }
+.logo { position:absolute; top:110px; left:100px; width:340px; }
+.endlogo { width:620px; margin:0 0 70px -20px; }
+.kicker { font-size:40px; color:var(--orange); font-weight:800; margin-bottom:36px; letter-spacing:.04em; }
+.big { font-size:104px; font-weight:800; line-height:1.02; letter-spacing:-.02em; color:var(--teal); }
+.num { align-self:flex-start; font-size:220px; font-weight:900; line-height:1; margin-bottom:30px; background:linear-gradient(90deg, var(--gold), var(--orange) 45%, var(--red)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.tip { font-size:82px; font-weight:800; line-height:1.05; margin-bottom:40px; color:var(--teal); }
+.fix { font-size:46px; line-height:1.35; color:#3b4a4f; }
+.fix b, .cta b { color:var(--red); }
+.cta { font-size:64px; font-weight:800; line-height:1.15; margin-bottom:50px; color:var(--teal); }
+.pill { display:inline-block; background:linear-gradient(90deg, var(--orange), var(--red)); color:#fff; font-size:48px; font-weight:800; padding:26px 46px; border-radius:80px; }
+.contact { margin-top:40px; font-size:40px; color:var(--tealDark); }
+.bar { position:absolute; bottom:160px; left:110px; right:110px; height:8px; background:rgba(1,137,159,.15); border-radius:8px; }
+.bar i { display:block; height:100%; width:0; background:linear-gradient(90deg, var(--gold), var(--orange), var(--red)); border-radius:8px; }
 </style>
 </head>
 <body>
@@ -110,6 +111,7 @@ tl.seek(0);
 const work = mkdtempSync(join(tmpdir(), "tt-reel-"));
 const tpl = join(root, "templates/tips-reel");
 for (const f of ["gsap.min.js", "hyperframes.json", "meta.json"]) copyFileSync(join(tpl, f), join(work, f));
+copyFileSync(join(root, brand.logo), join(work, "logo.png"));
 writeFileSync(join(work, "index.html"), html);
 
 const out = resolve(spec.out ? resolve(root, spec.out) : join(dirname(resolve(specPath)), basename(specPath, extname(specPath)) + ".mp4"));

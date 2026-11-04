@@ -16,7 +16,7 @@
 //   "out": "content/2026-w46/reel-goa.mp4"   // optional
 // }
 // Landscape (16:9) clips are cropped to fill the vertical frame; generate 9:16 in Flow when possible.
-// "duration" defaults to the whole clip after trimStart. In captions, **text** uses the accent colour.
+// "duration" defaults to the whole clip after trimStart. In captions, **text** is highlighted in brand gold.
 
 import { readFileSync, writeFileSync, mkdtempSync, copyFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -46,6 +46,7 @@ const r2 = (n) => Math.round(n * 100) / 100;
 const work = mkdtempSync(join(tmpdir(), "tt-clips-"));
 const tpl = join(root, "templates/tips-reel");
 for (const f of ["gsap.min.js", "hyperframes.json", "meta.json"]) copyFileSync(join(tpl, f), join(work, f));
+copyFileSync(join(root, brand.logo), join(work, "logo.png"));
 
 const OUTRO = 3;
 let t = 0;
@@ -63,7 +64,7 @@ spec.clips.forEach((c, i) => {
   parts.push(`<video id="v${i}" class="clip media" src="${name}" data-start="${t}" data-duration="${dur}" data-media-start="${trim}" ${audio} playsinline></video>`);
   if (i === 0 && spec.hook) {
     parts.push(`<div id="hook" class="clip hook" data-start="${t}" data-duration="${r2(Math.min(dur, 3.5))}">
-      <div class="brand">${esc(brand.nameMain)} <b>${esc(brand.nameAccent)}</b></div>
+      <div class="badge"><img src="logo.png" alt="Triptastic" /></div>
       <div class="hooktext">${rich(spec.hook)}</div></div>`);
     anims.push(`tl.fromTo("#hook > *", {opacity:0, y:50}, {opacity:1, y:0, duration:.6, stagger:.15, ease:"power3.out"}, ${t + 0.1});`);
   }
@@ -78,7 +79,7 @@ spec.clips.forEach((c, i) => {
   t = r2(t + dur);
 });
 parts.push(`<section id="outro" class="clip endcard" data-start="${t}" data-duration="${OUTRO}">
-  <div class="brand">${esc(brand.nameMain)} <b>${esc(brand.nameAccent)}</b></div>
+  <img class="endlogo" src="logo.png" alt="Triptastic" />
   <div class="cta">${rich(spec.cta.line)}</div>
   <div><span class="pill">${esc(spec.cta.button)}</span></div>
   ${brand.contactLine ? `<div class="contact">${esc(brand.contactLine)}</div>` : ""}
@@ -101,26 +102,28 @@ const html = `<!doctype html>
 <meta name="viewport" content="width=1080, height=1920" />
 <script src="gsap.min.js"></script>
 <style>
-:root { --sea:${c.primary}; --deep:${c.dark}; --sun:${c.accent}; --coral:${c.highlight}; --font:${brand.font}; }
+:root { --teal:${c.teal}; --tealDark:${c.tealDark}; --gold:${c.gold}; --orange:${c.orange}; --red:${c.red}; --cream:${c.cream}; --font:${brand.font}; }
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:1080px; height:1920px; overflow:hidden; background:#000; }
 #root { width:100%; height:100%; position:relative; font-family:var(--font); color:#fff; }
 .media { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 .hook { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 90px;
-  background:linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,.55) 100%); }
+  background:linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%); }
 .hooktext { font-size:100px; font-weight:800; line-height:1.03; letter-spacing:-.02em; text-shadow:0 4px 24px rgba(0,0,0,.5); }
-.hooktext b, .cap b, .cta b { color:var(--sun); }
-.brand { position:absolute; top:120px; left:90px; font-size:34px; letter-spacing:.18em; text-transform:uppercase; text-shadow:0 2px 12px rgba(0,0,0,.6); }
-.brand b { color:var(--sun); }
+.hooktext b, .cap b { color:var(--gold); }
+.badge { position:absolute; top:100px; left:80px; background:rgba(255,255,255,.94); border-radius:28px; padding:18px 26px; box-shadow:0 6px 24px rgba(0,0,0,.25); }
+.badge img { display:block; width:300px; }
 .cap { position:absolute; left:0; right:0; bottom:0; height:700px; display:flex; align-items:flex-end; padding:0 90px 260px;
   background:linear-gradient(0deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,0) 100%); }
 .cap span { font-size:64px; font-weight:800; line-height:1.12; text-shadow:0 3px 16px rgba(0,0,0,.6); }
-.endcard { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px;
-  background:linear-gradient(160deg, var(--sea) 0%, var(--deep) 75%); }
-.endcard .brand { left:110px; }
+.endcard { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:0 110px; color:var(--teal);
+  background:linear-gradient(165deg, #ffffff 0%, var(--cream) 70%, #ffe9cf 100%); }
+.endcard::after { content:""; position:absolute; left:0; right:0; bottom:0; height:22px; background:linear-gradient(90deg, var(--gold), var(--orange), var(--red)); }
+.endlogo { width:620px; margin:0 0 70px -20px; }
 .cta { font-size:64px; font-weight:800; line-height:1.15; margin-bottom:50px; }
-.pill { display:inline-block; background:var(--sun); color:var(--deep); font-size:48px; font-weight:800; padding:26px 46px; border-radius:80px; }
-.contact { margin-top:40px; font-size:40px; opacity:.85; }
+.cta b { color:var(--red); }
+.pill { display:inline-block; background:linear-gradient(90deg, var(--orange), var(--red)); color:#fff; font-size:48px; font-weight:800; padding:26px 46px; border-radius:80px; }
+.contact { margin-top:40px; font-size:40px; color:var(--tealDark); }
 </style>
 </head>
 <body>

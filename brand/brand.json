@@ -1,7 +1,15 @@
 {
   "nameMain": "Triptastic",
   "nameAccent": "Holidays",
-  "colors": { "primary": "#0b4f6c", "dark": "#062a3a", "accent": "#ffb347", "highlight": "#ff6f59" },
+  "logo": "brand/logo.png",
+  "colors": {
+    "teal": "#01899f",
+    "tealDark": "#035f6f",
+    "gold": "#fac63f",
+    "orange": "#f7941d",
+    "red": "#ef4136",
+    "cream": "#fff7ec"
+  },
   "font": "\"Helvetica Neue\", Arial, sans-serif",
   "contactLine": ""
 }

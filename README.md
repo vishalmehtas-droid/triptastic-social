@@ -13,5 +13,5 @@ Content for LinkedIn (personal profile) and Instagram (Triptastic account), prep
 |---|---|
 | `content/<week>/posts.md` | That week's posts and their status (DRAFT / APPROVED / SCHEDULED / POSTED) |
 | `content/<week>/*.mp4` | Ready-made Instagram Reels |
-| `brand/` | Brand colours, name and the facts/stories posts are allowed to use |
+| `brand/` | Logo (`logo.png`), brand colours, name and the facts/stories posts are allowed to use |
 | `log.md` | Everything posted so far and how it performed |
