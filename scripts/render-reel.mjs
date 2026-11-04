@@ -10,11 +10,13 @@
 //   "title": "4 mistakes couples make before the honeymoon",
 //   "items": [ { "head": "Booking flights before checking the visa", "body": "Check visa rules **first**. Then lock flights." } ],
 //   "cta": { "line": "Planning your honeymoon?\nWe'll handle the details.", "button": "DM \"HONEYMOON\"" },
+//   "voiceover": "incoming/2026-w46/vo-honeymoon.mp3", // optional narration (e.g. your cloned voice from VoiceStudio);
+//                                                       // scenes stretch evenly so the reel is never shorter than the voiceover
 //   "out": "content/2026-w45/reel-honeymoon.mp4"   // optional
 // }
 // In "body", **text** is highlighted in the brand red.
 
-import { readFileSync, writeFileSync, mkdtempSync, copyFileSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdtempSync, copyFileSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, resolve, basename, extname } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -37,28 +39,37 @@ if (!spec.title || !Array.isArray(spec.items) || spec.items.length === 0 || !spe
   process.exit(1);
 }
 
-const INTRO = 3.5, ITEM = 3.5, OUTRO = 3;
+let INTRO = 3.5, ITEM = 3.5, OUTRO = 3;
+let vo = null;
+if (spec.voiceover) {
+  vo = resolve(root, spec.voiceover);
+  if (!existsSync(vo)) throw new Error(`Voiceover not found: ${spec.voiceover}`);
+  const voDur = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", vo]).toString().trim());
+  const base = INTRO + ITEM * spec.items.length + OUTRO;
+  const k = Math.max(1, (voDur + 0.8) / base);
+  INTRO = Math.round(INTRO * k * 100) / 100; ITEM = Math.round(ITEM * k * 100) / 100; OUTRO = Math.round(OUTRO * k * 100) / 100;
+}
 const scenes = [];
 let t = 0;
 scenes.push({ start: t, dur: INTRO, html: `
   <img class="logo" src="logo.png" alt="Triptastic" />
   ${spec.kicker ? `<div class="kicker">${esc(spec.kicker)}</div>` : ""}
   <div class="big">${esc(spec.title)}</div>` });
-t += INTRO;
+t = Math.round((t + INTRO) * 100) / 100;
 spec.items.forEach((it, i) => {
   scenes.push({ start: t, dur: ITEM, html: `
   <div class="num">${String(i + 1).padStart(2, "0")}</div>
   <div class="tip">${esc(it.head)}</div>
   ${it.body ? `<div class="fix">${rich(it.body)}</div>` : ""}` });
-  t += ITEM;
+  t = Math.round((t + ITEM) * 100) / 100;
 });
 scenes.push({ start: t, dur: OUTRO, html: `
   <img class="endlogo" src="logo.png" alt="Triptastic" />
   <div class="cta">${rich(spec.cta.line)}</div>
   <div><span class="pill">${esc(spec.cta.button)}</span></div>
   ${brand.contactLine ? `<div class="contact">${esc(brand.contactLine)}</div>` : ""}` });
-t += OUTRO;
-const total = t;
+t = Math.round((t + OUTRO) * 100) / 100;
+const total = Math.round(t * 100) / 100;
 const c = brand.colors;
 
 const html = `<!doctype html>
@@ -94,6 +105,7 @@ html, body { width:1080px; height:1920px; overflow:hidden; background:var(--crea
 ${scenes.map((s, i) => `<section id="s${i}" class="scene clip" data-start="${s.start}" data-duration="${s.dur}">${s.html}
 </section>`).join("\n")}
 <div class="bar clip" data-start="0" data-duration="${total}"><i id="prog"></i></div>
+${vo ? `<audio class="clip" src="voiceover${extname(vo)}" data-start="0.3" data-duration="${Math.round((total - 0.3) * 100) / 100}" data-volume="1" data-fade-out="0.4"></audio>` : ""}
 </div>
 <script>
 const tl = gsap.timeline({ paused: true });
@@ -112,6 +124,7 @@ const work = mkdtempSync(join(tmpdir(), "tt-reel-"));
 const tpl = join(root, "templates/tips-reel");
 for (const f of ["gsap.min.js", "hyperframes.json", "meta.json"]) copyFileSync(join(tpl, f), join(work, f));
 copyFileSync(join(root, brand.logo), join(work, "logo.png"));
+if (vo) copyFileSync(vo, join(work, "voiceover" + extname(vo)));
 writeFileSync(join(work, "index.html"), html);
 
 const out = resolve(spec.out ? resolve(root, spec.out) : join(dirname(resolve(specPath)), basename(specPath, extname(specPath)) + ".mp4"));

@@ -12,6 +12,7 @@
 //   ],
 //   "keepAudio": false,      // true keeps each clip's own sound (e.g. Veo dialogue/ambience)
 //   "music": "",             // optional audio file laid under the whole reel (leave empty and add trending audio in Instagram)
+//   "voiceover": "",         // optional narration (e.g. your cloned voice from VoiceStudio); clip sound and music are lowered under it
 //   "cta": { "line": "Want this trip?\nWe'll plan it.", "button": "DM \"GOA\"" },
 //   "out": "content/2026-w46/reel-goa.mp4"   // optional
 // }
@@ -60,7 +61,7 @@ spec.clips.forEach((c, i) => {
   const trim = c.trimStart || 0;
   const dur = r2(c.duration || probe(src) - trim);
   if (!(dur > 0)) throw new Error(`Clip ${c.file} has no usable length after trimStart`);
-  const audio = spec.keepAudio ? `data-has-audio="true" data-fade-in="0.2" data-fade-out="0.2"` : "muted";
+  const audio = spec.keepAudio ? `data-has-audio="true" data-volume="${spec.voiceover ? 0.25 : 1}" data-fade-in="0.2" data-fade-out="0.2"` : "muted";
   parts.push(`<video id="v${i}" class="clip media" src="${name}" data-start="${t}" data-duration="${dur}" data-media-start="${trim}" ${audio} playsinline></video>`);
   if (i === 0 && spec.hook) {
     parts.push(`<div id="hook" class="clip hook" data-start="${t}" data-duration="${r2(Math.min(dur, 3.5))}">
@@ -91,7 +92,15 @@ if (spec.music) {
   const m = resolve(root, spec.music);
   if (!existsSync(m)) throw new Error(`Music not found: ${spec.music}`);
   copyFileSync(m, join(work, "music" + extname(m)));
-  parts.push(`<audio class="clip" src="music${extname(m)}" data-start="0" data-duration="${total}" data-volume="0.7" data-fade-out="1.5"></audio>`);
+  parts.push(`<audio class="clip" src="music${extname(m)}" data-start="0" data-duration="${total}" data-volume="${spec.voiceover ? 0.2 : 0.7}" data-fade-out="1.5"></audio>`);
+}
+if (spec.voiceover) {
+  const v = resolve(root, spec.voiceover);
+  if (!existsSync(v)) throw new Error(`Voiceover not found: ${spec.voiceover}`);
+  const vd = probe(v);
+  if (vd > total - 0.3) console.warn(`Warning: voiceover is ${r2(vd)}s but the reel is ${total}s; the end will be cut. Add clip time or trim the script.`);
+  copyFileSync(v, join(work, "voiceover" + extname(v)));
+  parts.push(`<audio class="clip" src="voiceover${extname(v)}" data-start="0.3" data-duration="${r2(total - 0.3)}" data-volume="1" data-fade-out="0.4"></audio>`);
 }
 
 const c = brand.colors;
