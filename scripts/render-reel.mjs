@@ -112,7 +112,7 @@ const tpl = join(root, "templates/tips-reel");
 for (const f of ["gsap.min.js", "hyperframes.json", "meta.json"]) copyFileSync(join(tpl, f), join(work, f));
 writeFileSync(join(work, "index.html"), html);
 
-const out = resolve(spec.out ? join(root, spec.out) : join(dirname(resolve(specPath)), basename(specPath, extname(specPath)) + ".mp4"));
+const out = resolve(spec.out ? resolve(root, spec.out) : join(dirname(resolve(specPath)), basename(specPath, extname(specPath)) + ".mp4"));
 const bin = join(root, "node_modules/.bin/hyperframes");
 try {
   execFileSync(bin, ["render", "-o", out], { cwd: work, stdio: "inherit", env: { ...process.env, HYPERFRAMES_SKIP_SKILLS: "1" } });

@@ -20,10 +20,14 @@ This repo runs the LinkedIn + Instagram content for Triptastic Holidays LLP. The
    - `posts.md`: 3 LinkedIn posts (Tue/Wed/Thu 9:00 AM IST) and 3 Instagram posts (2 Reels + 1 photo), following the format of `content/2026-w45/posts.md`.
    - Mix across the week: ~40% travel expertise, ~30% story/behind-the-scenes, ~20% community (polls, questions), max 1 offer post. Don't repeat a hook style or topic used in the last 2 weeks.
    - For each Reel, a JSON spec (see `scripts/render-reel.mjs` header) then render it: `npm install` once, then `node scripts/render-reel.mjs content/<week>/<reel>.json`. Check frames with ffmpeg before sending.
+   - At least one Reel per week should use real or Flow footage: write `flow-shots.md` (3–4 ready-to-paste Google Flow prompts, following `brand/flow-guide.md`) and a `reel-<topic>.json` clip spec. When the owner uploads the clips, save them in `incoming/<week>/`, then run `node scripts/edit-clips.mjs content/<week>/reel-<topic>.json`. If no clips arrive by Wednesday, fall back to a `render-reel.mjs` text Reel.
    - Use the `linkedin-skills` humanizer pass on LinkedIn drafts when available.
 3. Commit + push, then send the owner the drafts (text in chat + the MP4 files) and ask them to approve, edit or reject each post by ID (LI-1, IG-2…).
 4. On approval: mark `APPROVED` in `posts.md`. If the Publora connector is available, schedule each approved post for its slot and mark `SCHEDULED`. If not, give the owner the final text and files to paste, ready to copy.
 5. After posting, add a row to `log.md`. When stats are available (Publora `post_stats`), record them and use them to pick next week's topics.
+
+## Clip editor (Google Flow / phone footage)
+`scripts/edit-clips.mjs` turns raw clips into a branded Reel: trims, vertical crop, hook text over clip 1, captions per clip, optional music, Triptastic end card. Spec format is in the script header. AI clips are for scenery and mood only. Never present them as real client trips, real hotels or reviews (see `brand/flow-guide.md`).
 
 ## Reel template
 `scripts/render-reel.mjs` builds a branded 1080×1920 tips Reel from a JSON spec using HyperFrames (heygen-com/hyperframes, pinned in package.json). Colours, name and contact line come from `brand/brand.json`. Instagram audio is added by the owner in-app (trending audio gets more reach).
