@@ -30,6 +30,15 @@ This repo runs the LinkedIn + Instagram content for Triptastic Holidays LLP. The
 ## Clip editor (Google Flow / phone footage)
 `scripts/edit-clips.mjs` turns raw clips into a branded Reel: trims, vertical crop, hook text over clip 1, captions per clip, optional music, Triptastic end card. Spec format is in the script header. AI clips are for scenery and mood only. Never present them as real client trips, real hotels or reviews (see `brand/flow-guide.md`).
 
+## OpenMontage (agent-driven video production)
+Installed on demand with `bash scripts/setup-openmontage.sh` (~8 min, pinned commit; lands in `../OpenMontage`). Read its `AGENT_GUIDE.md` and follow its pipeline + approval gates; don't improvise. Use it for:
+- **documentary-montage**: destination Reels from real, free stock footage (Pexels/Pixabay; free for commercial use). Prefer this to AI clips for showing real places.
+- **talking-head**: owner's phone videos with word-level captions.
+- **localization-dub**: Hindi/regional versions of Reels.
+- **clip-factory**: several Reels from one long video.
+Always pass its output through `scripts/edit-clips.mjs` (or its HyperFrames compose with the brand colours/logo) so every Reel carries the Triptastic logo and end card.
+Needs network access to: api.pexels.com, pixabay.com, cdn.pixabay.com, videos.pexels.com, images.pexels.com, huggingface.co (+ cdn-lfs.huggingface.co, cas-bridge.xethub.hf.co) for voice/caption models. If a host is blocked, tell the owner which one; don't fake output.
+
 ## Reel template
 `scripts/render-reel.mjs` builds a branded 1080×1920 tips Reel from a JSON spec using HyperFrames (heygen-com/hyperframes, pinned in package.json). Colours, name and contact line come from `brand/brand.json`. Instagram audio is added by the owner in-app (trending audio gets more reach).
 Chromium is pre-installed in the cloud session. GSAP is vendored locally because the renderer's browser cannot reach CDNs.
