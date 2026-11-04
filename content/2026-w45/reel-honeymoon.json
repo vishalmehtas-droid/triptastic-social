@@ -1,0 +1,11 @@
+{
+  "kicker": "17 YEARS OF PLANNING HONEYMOONS",
+  "title": "4 mistakes couples make before the honeymoon",
+  "items": [
+    { "head": "Booking flights before checking the visa", "body": "Check visa rules and processing time **first**. Then lock flights." },
+    { "head": "Passport expiring within 6 months", "body": "Many countries refuse entry. **Check both passports today.**" },
+    { "head": "Packing 4 cities into 6 nights", "body": "It's a honeymoon, not a race. **Fewer places, more time.**" },
+    { "head": "Skipping travel insurance", "body": "One delayed flight costs more than the policy." }
+  ],
+  "cta": { "line": "Planning your honeymoon?\nWe'll handle the details.", "button": "DM \"HONEYMOON\"" }
+}

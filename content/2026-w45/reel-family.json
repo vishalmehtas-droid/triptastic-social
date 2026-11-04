@@ -1,0 +1,10 @@
+{
+  "kicker": "FAMILY TRIPS, 17 YEARS IN",
+  "title": "3 questions to ask before you book a family holiday",
+  "items": [
+    { "head": "What does each person actually want?", "body": "Kids, parents, grandparents. **Plan one thing for everyone.**" },
+    { "head": "How much travel time per day?", "body": "Long road days drain kids and elders. **Keep transfers short.**" },
+    { "head": "Is the hotel really family-friendly?", "body": "Check connecting rooms, food options and **how far it is from everything.**" }
+  ],
+  "cta": { "line": "Planning a family trip?\nTell us who's coming.", "button": "DM \"FAMILY\"" }
+}

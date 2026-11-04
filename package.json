@@ -1,0 +1,11 @@
+{
+  "name": "triptastic-social",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "reel": "node scripts/render-reel.mjs"
+  },
+  "devDependencies": {
+    "hyperframes": "0.9.10"
+  }
+}
