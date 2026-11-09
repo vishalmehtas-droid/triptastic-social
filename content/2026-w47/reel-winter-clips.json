@@ -1,0 +1,11 @@
+{
+  "hook": "3 winter trips in India that are **at their best right now**",
+  "clips": [
+    { "file": "incoming/2026-w47/winter-1.mp4", "caption": "Rann of Kutch: the **white desert**" },
+    { "file": "incoming/2026-w47/winter-2.mp4", "caption": "Jaisalmer: **golden fort, desert nights**" },
+    { "file": "incoming/2026-w47/winter-3.mp4", "caption": "Kerala: **slow houseboat days**" }
+  ],
+  "keepAudio": false,
+  "cta": { "line": "Which one is on your list?\nWe'll plan it.", "button": "DM \"WINTER\"" },
+  "out": "content/2026-w47/reel-winter-clips.mp4"
+}

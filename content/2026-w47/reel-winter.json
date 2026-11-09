@@ -1,0 +1,10 @@
+{
+  "kicker": "WINTER IN INDIA",
+  "title": "3 trips that are at their best right now",
+  "items": [
+    { "head": "Rann of Kutch, Gujarat", "body": "The white salt desert under a **full-moon sky.**" },
+    { "head": "Jaisalmer, Rajasthan", "body": "Golden fort, desert camps and **pleasant winter days.**" },
+    { "head": "Kerala backwaters", "body": "Houseboats, calm water and **cooler, drier days.**" }
+  ],
+  "cta": { "line": "Which one is on your list?\nWe'll plan it.", "button": "DM \"WINTER\"" }
+}

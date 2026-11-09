@@ -1,0 +1,11 @@
+{
+  "kicker": "TRAVELLING OVER CHRISTMAS & NEW YEAR?",
+  "title": "4 things to sort out this week",
+  "items": [
+    { "head": "Lock your flights now", "body": "Peak-week fares usually climb as dates get closer. **Book first, plan the rest after.**" },
+    { "head": "Choose free cancellation", "body": "Plans change in December. **Flexible bookings cost a little more and save a lot of stress.**" },
+    { "head": "Reserve New Year's Eve early", "body": "Popular dinners and events fill up fast. **Book the night you care about most.**" },
+    { "head": "Keep a buffer day", "body": "Fly back a day before work or school restarts. **You'll thank yourself.**" }
+  ],
+  "cta": { "line": "Want us to plan your\nyear-end trip?", "button": "DM \"DECEMBER\"" }
+}
